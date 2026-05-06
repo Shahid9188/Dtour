@@ -1,0 +1,24 @@
+# Dependencies
+node_modules/
+
+# Environment variables
+.env
+
+# Database
+db/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Build
+client/build/
+
+# Test/debug files
+server/test_output.txt
+server/test_output_utf8.txt
+server/test_models.json
