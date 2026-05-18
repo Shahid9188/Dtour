@@ -20,7 +20,8 @@ const expenseSchema = new mongoose.Schema({
     }],
     date: { type: Date, default: Date.now },
     notes: { type: String },
-    isSettled: { type: Boolean, default: false }
+    isSettled: { type: Boolean, default: false },
+    activityId: { type: String, default: null }
 }, { timestamps: true });
 
 module.exports = mongoose.model('Expense', expenseSchema);

@@ -2,9 +2,15 @@
     "name": "dtour-root",
     "version": "1.0.0",
     "scripts": {
-        "dev": "concurrently \"npm --prefix server run dev\" \"npm --prefix client start\""
+        "dev": "concurrently \"npm --prefix server run dev\" \"npm --prefix client start\"",
+        "install:all": "npm --prefix server install && npm --prefix client install",
+        "build": "npm run install:all && npm --prefix client run build",
+        "start": "node server/server.js"
     },
     "devDependencies": {
         "concurrently": "^8.2.2"
+    },
+    "engines": {
+        "node": ">=18.0.0"
     }
-}
+}

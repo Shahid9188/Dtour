@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTrip } from '../context/TripContext';
 import { useAuth } from '../context/AuthContext';
-import { aiAPI } from '../services/api';
+import { aiAPI, expenseAPI } from '../services/api';
 import toast from 'react-hot-toast';
 import ItineraryDay from '../components/ItineraryDay/ItineraryDay';
 import ExpenseCard from '../components/ExpenseCard/ExpenseCard';
@@ -43,7 +43,7 @@ const TripDashboard = () => {
     return (
         <div style={{ paddingBottom: '12rem', paddingTop: '100px' }}>
             {/* Sticky Header */}
-            <div style={{ position: 'sticky', top: '70px', zIndex: 900, background: 'rgba(249,246,239,0.9)', backdropFilter: 'blur(14px)', borderBottom: '1px solid var(--cream-dark)', padding: '1.5rem 2rem' }}>
+            <div style={{ position: 'sticky', top: '70px', zIndex: 900, background: 'var(--nav-bg-scrolled)', backdropFilter: 'blur(14px)', borderBottom: '1px solid var(--cream-dark)', padding: '1.5rem 2rem' }}>
                 <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                         <button onClick={() => navigate('/dashboard')} style={{ background: 'var(--warm-white)', border: '1px solid var(--cream-dark)', borderRadius: '50%', width: '40px', height: '40px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--ink-soft)', fontSize: '1rem', transition: 'border-color 0.2s' }}
@@ -95,7 +95,7 @@ const TripDashboard = () => {
                                 <div style={{ height: '100%', background: budgetPct > 90 ? '#B05530' : 'var(--sage)', width: `${budgetPct}%`, transition: 'width 0.5s ease', borderRadius: '4px' }} />
                             </div>
                         </div>
-                        {itinerary[0] && (<div><h3 style={{ fontFamily: 'var(--font-serif)', marginBottom: '1rem', fontWeight: 600, fontSize: '1.15rem' }}>Sneak Peek: Day 1</h3><ItineraryDay dayData={itinerary[0]} onUpdate={async () => fetchItinerary(id)} onReplan={handleReplanDay} /></div>)}
+                        {itinerary[0] && (<div><h3 style={{ fontFamily: 'var(--font-serif)', marginBottom: '1rem', fontWeight: 600, fontSize: '1.15rem' }}>Sneak Peek: Day 1</h3><ItineraryDay dayData={itinerary[0]} onUpdate={async () => fetchItinerary(id)} onReplan={handleReplanDay} onExpenseChange={() => fetchExpenses(id)} /></div>)}
                     </div>
                 )}
 
@@ -106,7 +106,7 @@ const TripDashboard = () => {
                             <p style={{ color: 'var(--ink-muted)', fontWeight: 300, marginBottom: '1rem' }}>No itinerary generated yet.</p>
                             <button onClick={() => generateItinerary(id)} style={{ padding: '0.7rem 1.5rem', background: 'var(--terra)', color: 'var(--warm-white)', border: 'none', borderRadius: '100px', cursor: 'pointer', fontWeight: 500 }}>Generate Now</button>
                         </div>
-                    ) : itinerary.map((day, i) => <ItineraryDay key={i} dayData={day} onUpdate={async () => fetchItinerary(id)} onReplan={handleReplanDay} />)}</div>
+                    ) : itinerary.map((day, i) => <ItineraryDay key={i} dayData={day} onUpdate={async () => fetchItinerary(id)} onReplan={handleReplanDay} onExpenseChange={() => fetchExpenses(id)} />)}</div>
                 )}
 
                 {/* BUDGET */}
@@ -141,7 +141,7 @@ const TripDashboard = () => {
                                 </form>
                             </div>
                             <h3 style={{ fontFamily: 'var(--font-serif)', fontWeight: 600, fontSize: '1.1rem', marginBottom: '1rem' }}>All Expenses</h3>
-                            {expenses.map(exp => <ExpenseCard key={exp._id} expense={exp} onSettle={async (eId) => { await aiAPI.settleExpense(eId); fetchExpenses(id); }} />)}
+                            {expenses.map(exp => <ExpenseCard key={exp._id} expense={exp} onSettle={async (eId) => { await expenseAPI.settle(eId); fetchExpenses(id); }} />)}
                         </div>
                         <div>
                             <div style={{ background: 'var(--terra)', color: 'var(--warm-white)', padding: '1.5rem', borderRadius: '20px', marginBottom: '1.5rem' }}>

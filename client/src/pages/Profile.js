@@ -119,6 +119,7 @@ const Profile = () => {
                                 <option value="JPY">JPY (¥)</option>
                                 <option value="AUD">AUD ($)</option>
                                 <option value="CAD">CAD ($)</option>
+                                <option value="INR">INR (₹)</option>
                             </select>
                         </div>
 
@@ -126,7 +127,7 @@ const Profile = () => {
                             <button 
                                 type="button"
                                 onClick={logout}
-                                style={{ padding: '0.8rem 1.8rem', background: 'transparent', color: '#C4613A', border: '1px solid rgba(196,97,58,0.2)', borderRadius: '100px', fontWeight: 500, fontSize: '0.9rem', cursor: 'pointer', transition: 'all 0.2s' }}
+                                style={{ padding: '0.8rem 1.8rem', background: 'transparent', color: 'var(--terra)', border: '1px solid rgba(196,97,58,0.2)', borderRadius: '100px', fontWeight: 500, fontSize: '0.9rem', cursor: 'pointer', transition: 'all 0.2s' }}
                                 onMouseEnter={e => { e.target.style.background = 'rgba(196,97,58,0.05)'; }}
                                 onMouseLeave={e => { e.target.style.background = 'transparent'; }}
                             >

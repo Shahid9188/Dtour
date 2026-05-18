@@ -4,6 +4,7 @@ import { Toaster } from 'react-hot-toast';
 
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { TripProvider } from './context/TripContext';
+import { ThemeProvider } from './context/ThemeContext';
 
 // Import Pages
 import Home from './pages/Home';
@@ -63,6 +64,7 @@ const AppRoutes = () => {
 function App() {
     return (
         <BrowserRouter>
+            <ThemeProvider>
             <AuthProvider>
                 <TripProvider>
                     <AppRoutes />
@@ -80,6 +82,7 @@ function App() {
                     />
                 </TripProvider>
             </AuthProvider>
+            </ThemeProvider>
         </BrowserRouter>
     );
 }

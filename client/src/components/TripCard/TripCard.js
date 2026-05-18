@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const TripCard = ({ trip, onDelete }) => {
     const [hovered, setHovered] = useState(false);
+    const navigate = useNavigate();
 
     const getEmoji = (dest) => {
         const map = { 'paris': '🗼', 'tokyo': '🗾', 'beach': '🏖️', 'mountain': '🏔️', 'italy': '🍕', 'lisbon': '🇵🇹', 'bali': '🌺' };
@@ -10,11 +11,12 @@ const TripCard = ({ trip, onDelete }) => {
         return '✈️';
     };
 
-    const statusColors = { planning: { bg: 'rgba(196,97,58,0.08)', color: '#C4613A' }, upcoming: { bg: 'rgba(122,155,118,0.1)', color: '#5A7A56' }, completed: { bg: 'rgba(138,103,122,0.1)', color: '#6A4A5A' } };
+    const statusColors = { planning: { bg: 'rgba(196,97,58,0.08)', color: 'var(--terra)' }, upcoming: { bg: 'rgba(122,155,118,0.1)', color: '#5A7A56' }, completed: { bg: 'rgba(138,103,122,0.1)', color: '#6A4A5A' } };
     const sc = statusColors[trip.status] || statusColors.planning;
 
     return (
         <div
+            onClick={() => navigate(`/trips/${trip._id}`)}
             style={{
                 background: 'var(--warm-white)', border: '1px solid var(--cream-dark)', borderRadius: '20px',
                 padding: '1.8rem', position: 'relative', overflow: 'hidden',
@@ -23,6 +25,7 @@ const TripCard = ({ trip, onDelete }) => {
                 boxShadow: hovered ? '0 16px 40px rgba(196,97,58,0.1)' : 'none',
                 borderColor: hovered ? 'var(--terra-light)' : 'var(--cream-dark)',
                 display: 'flex', flexDirection: 'column', gap: '0.8rem',
+                cursor: 'pointer'
             }}
             onMouseEnter={() => setHovered(true)}
             onMouseLeave={() => setHovered(false)}
@@ -44,9 +47,9 @@ const TripCard = ({ trip, onDelete }) => {
             </div>
 
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 'auto', paddingTop: '1rem', borderTop: '1px solid var(--cream-dark)' }}>
-                <Link to={`/trips/${trip._id}`} style={{ fontWeight: 500, color: 'var(--terra)', fontSize: '0.9rem' }}>View Trip →</Link>
-                <button onClick={() => onDelete(trip._id)} style={{ background: 'none', border: 'none', color: 'var(--ink-muted)', cursor: 'pointer', fontSize: '1rem', padding: '4px', transition: 'color 0.2s' }}
-                    onMouseEnter={e => e.target.style.color = '#C4613A'}
+                <span style={{ fontWeight: 500, color: 'var(--terra)', fontSize: '0.9rem' }}>View Trip →</span>
+                <button onClick={(e) => { e.stopPropagation(); onDelete(trip._id); }} style={{ background: 'none', border: 'none', color: 'var(--ink-muted)', cursor: 'pointer', fontSize: '1rem', padding: '4px', transition: 'color 0.2s', position: 'relative', zIndex: 10 }}
+                    onMouseEnter={e => e.target.style.color = 'var(--terra)'}
                     onMouseLeave={e => e.target.style.color = 'var(--ink-muted)'}
                 >🗑️</button>
             </div>

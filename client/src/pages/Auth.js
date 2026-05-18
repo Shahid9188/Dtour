@@ -83,7 +83,7 @@ export const Login = () => {
     return (
         <AuthShell title="Welcome back" subtitle="Pick up right where you left off.">
             <form onSubmit={handleSubmit}>
-                {error && <div style={{ color: '#C4613A', background: 'rgba(196,97,58,0.08)', padding: '10px 14px', borderRadius: '10px', marginBottom: '1rem', textAlign: 'center', fontSize: '0.9rem', border: '1px solid rgba(196,97,58,0.15)' }}>{error}</div>}
+                {error && <div style={{ color: 'var(--terra)', background: 'rgba(196,97,58,0.08)', padding: '10px 14px', borderRadius: '10px', marginBottom: '1rem', textAlign: 'center', fontSize: '0.9rem', border: '1px solid rgba(196,97,58,0.15)' }}>{error}</div>}
                 <input
                     style={inputStyle}
                     type="email"
@@ -155,7 +155,7 @@ export const Register = () => {
     return (
         <AuthShell title="Create account" subtitle="Begin discovering your travel persona.">
             <form onSubmit={handleSubmit}>
-                {(error || localErr) && <div style={{ color: '#C4613A', background: 'rgba(196,97,58,0.08)', padding: '10px 14px', borderRadius: '10px', marginBottom: '1rem', textAlign: 'center', fontSize: '0.9rem', border: '1px solid rgba(196,97,58,0.15)' }}>{error || localErr}</div>}
+                {(error || localErr) && <div style={{ color: 'var(--terra)', background: 'rgba(196,97,58,0.08)', padding: '10px 14px', borderRadius: '10px', marginBottom: '1rem', textAlign: 'center', fontSize: '0.9rem', border: '1px solid rgba(196,97,58,0.15)' }}>{error || localErr}</div>}
                 <input style={inputStyle} type="text" placeholder="Full Name" value={name} onChange={e => setName(e.target.value)} required onFocus={focusHandler} onBlur={blurHandler} />
                 <input style={inputStyle} type="email" placeholder="Email address" value={email} onChange={e => setEmail(e.target.value)} required onFocus={focusHandler} onBlur={blurHandler} />
                 <input style={inputStyle} type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} required onFocus={focusHandler} onBlur={blurHandler} />

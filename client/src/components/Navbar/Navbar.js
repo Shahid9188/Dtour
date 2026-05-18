@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { useTheme } from '../../context/ThemeContext';
 
 const Navbar = () => {
     const { isAuthenticated, user, logout } = useAuth();
+    const { isDark, toggleTheme } = useTheme();
     const [scrolled, setScrolled] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
     const location = useLocation();
@@ -28,9 +30,9 @@ const Navbar = () => {
         alignItems: 'center',
         justifyContent: 'space-between',
         padding: scrolled ? '1rem 3.5rem' : '1.4rem 3.5rem',
-        background: scrolled ? 'rgba(249,246,239,0.82)' : 'transparent',
+        background: scrolled ? 'var(--nav-bg-scrolled)' : 'transparent',
         backdropFilter: scrolled ? 'blur(14px)' : 'none',
-        borderBottom: scrolled ? '1px solid rgba(196,97,58,0.1)' : 'none',
+        borderBottom: scrolled ? '1px solid var(--nav-border-scrolled)' : 'none',
         transition: 'all 0.3s ease',
     };
 
@@ -41,7 +43,7 @@ const Navbar = () => {
         fontFamily: "'Cormorant Garamond', serif",
         fontSize: '1.5rem',
         fontWeight: 600,
-        color: '#1C1A16',
+        color: 'var(--ink)',
         letterSpacing: '0.04em',
         textDecoration: 'none',
     };
@@ -50,7 +52,7 @@ const Navbar = () => {
         width: '8px',
         height: '8px',
         borderRadius: '50%',
-        background: '#C4613A',
+        background: 'var(--terra)',
         marginTop: '2px',
     };
 
@@ -58,14 +60,14 @@ const Navbar = () => {
         textDecoration: 'none',
         fontSize: '0.85rem',
         fontWeight: 400,
-        color: '#4A4540',
+        color: 'var(--ink-soft)',
         letterSpacing: '0.03em',
         transition: 'color 0.2s',
     };
 
     const btnNavStyle = {
-        background: '#1C1A16',
-        color: '#F9F6EF',
+        background: 'var(--ink)',
+        color: 'var(--cream)',
         padding: '0.55rem 1.4rem',
         borderRadius: '100px',
         fontSize: '0.85rem',
@@ -81,7 +83,7 @@ const Navbar = () => {
         width: '38px',
         height: '38px',
         borderRadius: '50%',
-        background: 'linear-gradient(135deg, #C4613A, #D4B896)',
+        background: 'linear-gradient(135deg, var(--terra), var(--sand))',
         color: '#FDFBF7',
         display: 'flex',
         alignItems: 'center',
@@ -97,14 +99,30 @@ const Navbar = () => {
         position: 'absolute',
         top: '50px',
         right: '0',
-        background: '#FDFBF7',
-        border: '1px solid #EDE8DC',
+        background: 'var(--warm-white)',
+        border: '1px solid var(--cream-dark)',
         borderRadius: '16px',
         padding: '1.2rem',
         minWidth: '220px',
         display: menuOpen ? 'block' : 'none',
-        boxShadow: '0 16px 40px rgba(28,26,22,0.1)',
+        boxShadow: '0 16px 40px rgba(0,0,0,0.12)',
         zIndex: 1001,
+    };
+
+    const themeToggleStyle = {
+        width: '36px',
+        height: '36px',
+        borderRadius: '50%',
+        border: '1px solid var(--cream-dark)',
+        background: 'var(--warm-white)',
+        color: 'var(--ink)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        cursor: 'pointer',
+        fontSize: '1.1rem',
+        transition: 'all 0.3s ease',
+        flexShrink: 0,
     };
 
     return (
@@ -120,34 +138,43 @@ const Navbar = () => {
                         <Link
                             to="/explore"
                             style={linkStyle}
-                            onMouseEnter={e => e.target.style.color = '#C4613A'}
-                            onMouseLeave={e => e.target.style.color = '#4A4540'}
+                            onMouseEnter={e => e.target.style.color = 'var(--terra)'}
+                            onMouseLeave={e => e.target.style.color = 'var(--ink-soft)'}
                         >
                             Explore
                         </Link>
                         <Link
                             to="/dashboard"
                             style={linkStyle}
-                            onMouseEnter={e => e.target.style.color = '#C4613A'}
-                            onMouseLeave={e => e.target.style.color = '#4A4540'}
+                            onMouseEnter={e => e.target.style.color = 'var(--terra)'}
+                            onMouseLeave={e => e.target.style.color = 'var(--ink-soft)'}
                         >
                             Dashboard
                         </Link>
                         <Link
                             to="/trips/new"
                             style={linkStyle}
-                            onMouseEnter={e => e.target.style.color = '#C4613A'}
-                            onMouseLeave={e => e.target.style.color = '#4A4540'}
+                            onMouseEnter={e => e.target.style.color = 'var(--terra)'}
+                            onMouseLeave={e => e.target.style.color = 'var(--ink-soft)'}
                         >
                             New Trip
                         </Link>
+                        <button
+                            onClick={toggleTheme}
+                            style={themeToggleStyle}
+                            onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--terra)'; e.currentTarget.style.transform = 'rotate(20deg)'; }}
+                            onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--cream-dark)'; e.currentTarget.style.transform = 'none'; }}
+                            title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+                        >
+                            {isDark ? '☀️' : '🌙'}
+                        </button>
                         <div style={avatarStyle} onClick={() => setMenuOpen(!menuOpen)}>
                             {user?.name?.charAt(0).toUpperCase()}
 
                             <div style={dropdownStyle}>
-                                <div style={{ marginBottom: '12px', paddingBottom: '12px', borderBottom: '1px solid #EDE8DC' }}>
-                                    <div style={{ fontWeight: 600, color: '#1C1A16', fontFamily: "'Cormorant Garamond', serif", fontSize: '1.1rem' }}>{user?.name}</div>
-                                    <div style={{ fontSize: '0.8rem', color: '#8A837A', marginTop: '2px' }}>{user?.email}</div>
+                                <div style={{ marginBottom: '12px', paddingBottom: '12px', borderBottom: '1px solid var(--cream-dark)' }}>
+                                    <div style={{ fontWeight: 600, color: 'var(--ink)', fontFamily: "'Cormorant Garamond', serif", fontSize: '1.1rem' }}>{user?.name}</div>
+                                    <div style={{ fontSize: '0.8rem', color: 'var(--ink-muted)', marginTop: '2px' }}>{user?.email}</div>
                                     {user?.travelPersonality && (
                                         <div style={{
                                             display: 'inline-block',
@@ -156,7 +183,7 @@ const Navbar = () => {
                                             padding: '0.3rem 0.8rem',
                                             borderRadius: '100px',
                                             background: 'rgba(196,97,58,0.1)',
-                                            color: '#C4613A',
+                                            color: 'var(--terra)',
                                             fontWeight: 500,
                                         }}>
                                             {user.travelPersonality}
@@ -167,22 +194,22 @@ const Navbar = () => {
                                     to="/profile"
                                     style={{
                                         display: 'block',
-                                        color: '#4A4540',
+                                        color: 'var(--ink-soft)',
                                         textDecoration: 'none',
                                         fontWeight: 500,
                                         fontSize: '0.85rem',
                                         padding: '6px 0',
                                         transition: 'color 0.2s',
                                     }}
-                                    onMouseEnter={e => e.target.style.color = '#C4613A'}
-                                    onMouseLeave={e => e.target.style.color = '#4A4540'}
+                                    onMouseEnter={e => e.target.style.color = 'var(--terra)'}
+                                    onMouseLeave={e => e.target.style.color = 'var(--ink-soft)'}
                                 >
                                     Profile Settings
                                 </Link>
                                 <div
                                     onClick={logout}
                                     style={{
-                                        color: '#C4613A',
+                                        color: 'var(--terra)',
                                         cursor: 'pointer',
                                         fontWeight: 500,
                                         fontSize: '0.85rem',
@@ -202,24 +229,33 @@ const Navbar = () => {
                         <Link
                             to="/explore"
                             style={linkStyle}
-                            onMouseEnter={e => e.target.style.color = '#C4613A'}
-                            onMouseLeave={e => e.target.style.color = '#4A4540'}
+                            onMouseEnter={e => e.target.style.color = 'var(--terra)'}
+                            onMouseLeave={e => e.target.style.color = 'var(--ink-soft)'}
                         >
                             Explore
                         </Link>
                         <Link
                             to="/login"
                             style={linkStyle}
-                            onMouseEnter={e => e.target.style.color = '#C4613A'}
-                            onMouseLeave={e => e.target.style.color = '#4A4540'}
+                            onMouseEnter={e => e.target.style.color = 'var(--terra)'}
+                            onMouseLeave={e => e.target.style.color = 'var(--ink-soft)'}
                         >
                             Sign In
                         </Link>
+                        <button
+                            onClick={toggleTheme}
+                            style={themeToggleStyle}
+                            onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--terra)'; e.currentTarget.style.transform = 'rotate(20deg)'; }}
+                            onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--cream-dark)'; e.currentTarget.style.transform = 'none'; }}
+                            title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+                        >
+                            {isDark ? '☀️' : '🌙'}
+                        </button>
                         <Link to="/register">
                             <button
                                 style={btnNavStyle}
-                                onMouseEnter={e => { e.target.style.background = '#C4613A'; e.target.style.transform = 'translateY(-1px)'; }}
-                                onMouseLeave={e => { e.target.style.background = '#1C1A16'; e.target.style.transform = 'none'; }}
+                                onMouseEnter={e => { e.target.style.background = 'var(--terra)'; e.target.style.transform = 'translateY(-1px)'; }}
+                                onMouseLeave={e => { e.target.style.background = 'var(--ink)'; e.target.style.transform = 'none'; }}
                             >
                                 Get Started
                             </button>

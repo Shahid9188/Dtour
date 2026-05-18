@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { itineraryAPI } from '../../services/api';
 
-const ItineraryDay = ({ dayData, onUpdate, onReplan }) => {
+const ItineraryDay = ({ dayData, onUpdate, onReplan, onExpenseChange }) => {
     const [isExpanded, setIsExpanded] = useState(true);
     const [editingId, setEditingId] = useState(null);
     const [editForm, setEditForm] = useState(null);
 
-    const handleToggleComplete = async (actId) => { const res = await itineraryAPI.toggleComplete(dayData._id, actId); onUpdate(res); };
+    const handleToggleComplete = async (actId) => { const res = await itineraryAPI.toggleComplete(dayData._id, actId); onUpdate(res); if (onExpenseChange) onExpenseChange(); };
     const handleDelete = async (actId) => { const res = await itineraryAPI.deleteActivity(dayData._id, actId); onUpdate(res); };
     const handleEditClick = (act) => { setEditingId(act._id); setEditForm({ ...act }); };
     const handleSaveEdit = async () => {

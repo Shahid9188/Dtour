@@ -37,6 +37,44 @@
   --shadow-md: 0 8px 24px rgba(28, 26, 22, 0.07);
   --shadow-lg: 0 16px 40px rgba(196, 97, 58, 0.12);
   --shadow-terra: 0 4px 20px rgba(196, 97, 58, 0.28);
+
+  /* Dark-mode-specific surface helpers */
+  --card-border: rgba(28, 26, 22, 0.12);
+  --nav-bg-scrolled: rgba(249, 246, 239, 0.82);
+  --nav-border-scrolled: rgba(196, 97, 58, 0.1);
+  --feature-section-bg: #1C1A16;
+  --feature-section-text: #F9F6EF;
+  --feature-section-muted: rgba(249, 246, 239, 0.5);
+}
+
+[data-theme="dark"] {
+  --cream: #1A1816;
+  --cream-dark: #2A2622;
+  --ink: #F0ECE4;
+  --ink-soft: #C8C2B8;
+  --ink-muted: #8A837A;
+  --terra: #D4764E;
+  --terra-light: #3D2A20;
+  --terra-dark: #E88A5E;
+  --sage: #8EAF8A;
+  --sage-light: #2A352A;
+  --sand: #D4B896;
+  --warm-white: #222018;
+
+  --gradient-terra: linear-gradient(135deg, #D4764E, #D4B896);
+  --gradient-terra-sage: linear-gradient(to right, var(--terra-light), var(--sage-light));
+
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.25);
+  --shadow-lg: 0 16px 40px rgba(212, 118, 78, 0.15);
+  --shadow-terra: 0 4px 20px rgba(212, 118, 78, 0.35);
+
+  --card-border: rgba(255, 255, 255, 0.08);
+  --nav-bg-scrolled: rgba(26, 24, 22, 0.88);
+  --nav-border-scrolled: rgba(212, 118, 78, 0.15);
+  --feature-section-bg: #0F0E0C;
+  --feature-section-text: #F0ECE4;
+  --feature-section-muted: rgba(240, 236, 228, 0.45);
 }
 
 html {
@@ -50,6 +88,7 @@ body {
   overflow-x: hidden;
   line-height: 1.6;
   min-height: 100vh;
+  transition: background 0.4s ease, color 0.4s ease;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -97,6 +136,7 @@ input:focus, select:focus, textarea:focus {
   min-height: 100vh;
   width: 100%;
   position: relative;
+  transition: background 0.4s ease;
 }
 
 /* ── ANIMATIONS ──────────────────────────── */

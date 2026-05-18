@@ -12,7 +12,10 @@ const app = express();
 // Middleware
 app.use(express.json());
 app.use(helmet());
-app.use(cors({ origin: process.env.CLIENT_URL || 'http://localhost:3000' }));
+const corsOptions = process.env.NODE_ENV === 'production'
+  ? {} // Same origin in production, no restrictions needed
+  : { origin: process.env.CLIENT_URL || 'http://localhost:3000' };
+app.use(cors(corsOptions));
 app.use(morgan('dev'));
 
 const limiter = rateLimit({
@@ -27,6 +30,17 @@ app.use('/api/trips', require('./routes/tripRoutes'));
 app.use('/api/itineraries', require('./routes/itineraryRoutes'));
 app.use('/api/expenses', require('./routes/expenseRoutes'));
 app.use('/api/ai', require('./routes/aiRoutes'));
+
+// --- Production: Serve React static files ---
+if (process.env.NODE_ENV === 'production') {
+  const clientBuildPath = path.join(__dirname, '..', 'client', 'build');
+  app.use(express.static(clientBuildPath));
+
+  // Catch-all: send React's index.html for any non-API route
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(clientBuildPath, 'index.html'));
+  });
+}
 
 // Error handler
 app.use((err, req, res, next) => {

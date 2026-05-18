@@ -1,4 +1,6 @@
 const Itinerary = require('../models/Itinerary');
+const Expense = require('../models/Expense');
+const Trip = require('../models/Trip');
 
 exports.getTripItinerary = async (req, res) => {
     try {
@@ -68,8 +70,43 @@ exports.toggleComplete = async (req, res) => {
 
         activity.isCompleted = !activity.isCompleted;
         await itinerary.save();
+
+        // Auto-create or remove expense based on completion status
+        if (activity.isCompleted && activity.estimatedCost > 0) {
+            // Create an expense for this completed activity
+            const trip = await Trip.findById(itinerary.trip);
+            const membersList = trip ? trip.members.map(m => ({ email: m.email, name: m.name, amount: 0 })) : [];
+
+            // For solo trips or if only one member, create a simple expense
+            const splitAmount = membersList.length > 0 ? activity.estimatedCost / membersList.length : activity.estimatedCost;
+            const splitAmong = membersList.length > 0
+                ? membersList.map(m => ({ ...m, amount: splitAmount }))
+                : [{ email: req.user.email, name: req.user.name, amount: activity.estimatedCost }];
+
+            await Expense.create({
+                trip: itinerary.trip,
+                title: `${activity.title}`,
+                amount: activity.estimatedCost,
+                currency: activity.currency || 'USD',
+                category: 'activity',
+                paidBy: { email: req.user.email, name: req.user.name },
+                splitType: 'equal',
+                splitAmong,
+                date: itinerary.date,
+                notes: `Auto-added from itinerary Day ${itinerary.dayNumber}`,
+                activityId: activity._id.toString()
+            });
+        } else if (!activity.isCompleted) {
+            // Remove the auto-created expense when activity is un-done
+            await Expense.deleteOne({
+                trip: itinerary.trip,
+                activityId: activity._id.toString()
+            });
+        }
+
         res.json(itinerary);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 };
+

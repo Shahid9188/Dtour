@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useTrip } from '../context/TripContext';
 import { useAuth } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const TripBuilder = () => {
+    const location = useLocation();
+    const prefill = location.state || {};
     const [step, setStep] = useState(0);
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const [formData, setFormData] = useState({
-        title: 'My Awesome Trip', type: 'solo', destination: '', startDate: '', endDate: '',
+        title: prefill.title || 'My Awesome Trip', type: 'solo', destination: prefill.destination || '', startDate: '', endDate: '',
         personalityType: '', budgetTotal: '', currency: 'USD', activityPreferences: [], season: ''
     });
     const { createTrip, generateItinerary, fetchTrips } = useTrip();
@@ -21,6 +24,7 @@ const TripBuilder = () => {
     const prevStep = () => setStep(prev => prev - 1);
 
     const handleFinish = async () => {
+        setIsSubmitting(true);
         try {
             const payload = {
                 title: formData.title || `Trip to ${formData.destination}`, type: formData.type,
@@ -32,7 +36,11 @@ const TripBuilder = () => {
             await generateItinerary(trip._id);
             await fetchTrips();
             navigate(`/trips/${trip._id}`);
-        } catch (err) { console.error(err); }
+        } catch (err) { 
+            console.error(err); 
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     const stepsHeader = ['Trip Type', 'Style', 'Logistics', 'Destination', 'Review'];
@@ -126,7 +134,7 @@ const TripBuilder = () => {
                                 <div>
                                     <label style={{ display: 'block', marginBottom: '8px', fontWeight: 500, fontSize: '0.9rem', color: 'var(--ink-soft)' }}>Currency</label>
                                     <select style={inputStyle} value={formData.currency} onChange={e => setFormData({ ...formData, currency: e.target.value })}>
-                                        <option value="USD">USD</option><option value="EUR">EUR</option><option value="GBP">GBP</option><option value="JPY">JPY</option>
+                                        <option value="USD">USD</option><option value="EUR">EUR</option><option value="GBP">GBP</option><option value="JPY">JPY</option><option value="INR">INR</option>
                                     </select>
                                 </div>
                             </div>
@@ -170,10 +178,10 @@ const TripBuilder = () => {
                                 onMouseLeave={e => { e.target.style.background = 'var(--terra)'; e.target.style.transform = 'none'; }}
                             >Next Step →</button>
                         ) : (
-                            <button onClick={handleFinish} style={{ padding: '0.75rem 2rem', background: 'var(--ink)', color: 'var(--cream)', border: 'none', borderRadius: '100px', cursor: 'pointer', fontWeight: 500, fontSize: '0.95rem', transition: 'background 0.2s, transform 0.15s' }}
-                                onMouseEnter={e => { e.target.style.background = 'var(--terra)'; e.target.style.transform = 'translateY(-1px)'; }}
-                                onMouseLeave={e => { e.target.style.background = 'var(--ink)'; e.target.style.transform = 'none'; }}
-                            >Create & Generate ✦</button>
+                            <button onClick={handleFinish} disabled={isSubmitting} style={{ padding: '0.75rem 2rem', background: isSubmitting ? 'var(--ink-muted)' : 'var(--ink)', color: 'var(--cream)', border: 'none', borderRadius: '100px', cursor: isSubmitting ? 'not-allowed' : 'pointer', fontWeight: 500, fontSize: '0.95rem', transition: 'background 0.2s, transform 0.15s' }}
+                                onMouseEnter={e => { if(!isSubmitting) { e.target.style.background = 'var(--terra)'; e.target.style.transform = 'translateY(-1px)'; } }}
+                                onMouseLeave={e => { if(!isSubmitting) { e.target.style.background = 'var(--ink)'; e.target.style.transform = 'none'; } }}
+                            >{isSubmitting ? 'Generating...' : 'Create & Generate ✦'}</button>
                         )}
                     </div>
                 </div>
