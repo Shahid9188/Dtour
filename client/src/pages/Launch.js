@@ -74,7 +74,7 @@ const Launch = () => {
                     opacity: 0
                 }}>
                     The future of <br/>
-                    <em style={{ fontStyle: 'italic', color: 'var(--terra)', fontWeight: 400 }}>intelligent travel.</em>
+                    <em style={{ fontStyle: 'italic', color: 'var(--terra)', fontWeight: 400 }}>Intelligent travel.</em>
                 </h1>
 
                 <p style={{ 
