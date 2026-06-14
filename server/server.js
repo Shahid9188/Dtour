@@ -11,7 +11,14 @@ const app = express();
 
 // Middleware
 app.use(express.json());
-app.use(helmet());
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      ...helmet.contentSecurityPolicy.getDefaultDirectives(),
+      "img-src": ["'self'", "data:", "https://images.unsplash.com"],
+    },
+  },
+}));
 const corsOptions = process.env.NODE_ENV === 'production'
   ? {} // Same origin in production, no restrictions needed
   : { origin: process.env.CLIENT_URL || 'http://localhost:3000' };
